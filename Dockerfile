@@ -6,7 +6,7 @@ RUN \
     tar xvzf convoy.tar.gz && \
     cp convoy/convoy convoy/convoy-pdata_tools /usr/local/bin/ && \
     sudo mkdir -p /etc/docker/plugins/ && \
-    echo "unix:///var/run/convoy/convoy.sock" > /etc/docker/plugins/convoy.spec &&
+    echo "unix:///var/run/convoy/convoy.sock" > /etc/docker/plugins/convoy.spec && \
     cd / && \
     rm -rf ${TEMP}
 ENTRYPOINT [ "docker-entrypoint.sh" ]
