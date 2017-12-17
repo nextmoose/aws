@@ -2,7 +2,7 @@ FROM alpine:3.4
 RUN \
     apk update && \
         apk upgrade && \
-        apk add --no-cache py-pip bash docker sudo && \
+        apk add --no-cache py-pip bash docker sudo groff && \
         adduser -D user && \
         apk add --no-cache docker-bash-completion bash-completion && \
         echo "user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/user && \
