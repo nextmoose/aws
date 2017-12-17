@@ -10,6 +10,7 @@ RUN \
         rm -rf /var/cache/apk/*
 USER user
 RUN \
-    pip install awscli --upgrade --user
+    pip install awscli --upgrade --user && \
+        echo "export PATH=\${HOME}/.local/bin:\${PATH}" >> ${HOME}/.bashrc
 ENTRYPOINT ["bash"]
 CMD []
