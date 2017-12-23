@@ -8,6 +8,6 @@ echo SOURCE: http://docs.aws.amazon.com/cli/latest/userguide/tutorial-ec2-ubuntu
     echo DO NOT Next, create a key pair, which allows you to connect to the instance. &&
     echo INSTEAD Let us upload a key pair. &&
     aws ec2 import-key-pair --key-name lieutenant-key --public-key-material "${LIEUTENANT_PUBLIC_KEY}" &&
-    echo On Linux, you will also need to change the file mode so that only you have access to the key file. &&
-    chmod 400 devenv-key.pem
+    echo DO NOT On Linux, you will also need to change the file mode so that only you have access to the key file. &&
+    echo DO NOT chmod 400 devenv-key.pem
     echo DONE
