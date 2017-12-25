@@ -1,0 +1,4 @@
+Host volumes-backup
+HostName ${VOLUMES_BACKUP}
+IdentityFile ~/.ssh/volumes_backup_id_rsa
+User ec2-user
