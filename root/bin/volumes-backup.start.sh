@@ -19,9 +19,10 @@ aws ec2 create-security-group --group-name ${VOLUMES_BACKUP_SECURITY_GROUP} --de
         --no-encrypted \
         --size 8 \
         --tag-specifications "ResourceType=volume,Tags=[{Key=rand,Value=29105}]" &&
-    while [ -z "$(aws ec2 describe-instances --filters Name=tag:rand,Values=29105 Name=instance-state-name,Values=running --query "Reservations[0].Instances[0].InstanceId" --output text)" ]
+    while [ $(aws ec2 describe-instance-status --instance-id $(aws ec2 describe-instances --filters Name=tag:rand,Values=29105 Name=instance-state-name,Values=running --query "Reservations[0].Instances[0].InstanceId" --output text) --query "InstanceStatuses[0].InstanceState.Name" --output text) != "running" ]
     do
-        waiting for instance &&
+        echo waiting for instance &&
+            aws ec2 describe-instance-status --instance-id $(aws ec2 describe-instances --filters Name=tag:rand,Values=29105 Name=instance-state-name,Values=running --query "Reservations[0].Instances[0].InstanceId" --output text) --query "InstanceStatuses[0]" &&
             sleep 10s
     done &&
     sleep 1m &&
@@ -31,4 +32,6 @@ aws ec2 create-security-group --group-name ${VOLUMES_BACKUP_SECURITY_GROUP} --de
         --device /dev/sdh \
         --volume-id $(aws ec2 describe-volumes --filters Name=tag:rand,Values=29105 --query "Volumes[0].VolumeId" --output text) \
         --instance-id $(aws ec2 describe-instances --filters Name=tag:rand,Values=29105 Name=instance-state-name,Values=running --query "Reservations[0].Instances[0].InstanceId" --output text) &&
-    aws ec2 describe-instances --filters Name=tag:rand,Values=29105 --query "Reservations[0].Instances[0].PublicIpAddress" --output text
+    echo "${VOLUMES_BACKUP_PRIVATE_KEY}" > /home/user/.ssh/volumes_backup_id_rsa &&
+    sed -i "s#\${VOLUMES_BACKUP}#$(aws ec2 describe-instances --filters Name=tag:rand,Values=29105 --query "Reservations[0].Instances[0].PublicIpAddress" --output text)#" /home/user/.ssh/config &&
+    ssh volumes_backup "sudo mkfs -t ext4 /dev/xvdh && sudo mount /dev/xvdh /data"
