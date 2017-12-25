@@ -1,0 +1,4 @@
+#!/bin/sh
+
+aws ec2 create-security-group --group-name ${VOLUMES_BACKUP_SECURITY_GROUP} --description "security group for the backup volumes environment in EC2" &&
+    aws ec2 authorize-security-group-ingress --group-name ${VOLUMES_BACKUP_SECURITY_GROUP} --protocol tcp --port 22 --cidr 0.0.0.0/0 
