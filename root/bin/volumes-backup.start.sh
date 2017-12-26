@@ -27,7 +27,7 @@ aws \
                 create-volume \
                 --availability-zone $(aws ec2 describe-instances --filters Name=tag:rand,Values=29105 --query "Reservations[0].Instances[0].Placement.AvailabilityZone" --output text) \
                 --no-encrypted \
-                --size 8 \
+                --size 465 \
                 --tag-specifications "ResourceType=volume,Tags=[{Key=rand,Value=29105}]" \
                 --query "VolumeId" \
                 --output text
