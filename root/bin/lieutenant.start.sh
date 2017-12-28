@@ -17,6 +17,7 @@ aws \
             --query "Instances[0].InstanceId" \
             --output text \
             ) &&
+    aws ec2 associate-address --allocation-id $(aws ec2 allocate-address --query "AllocationId" --output text) --instance-id $(aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].InstanceId" --output text) &&
     aws ec2 authorize-security-group-ingress --group-id $(aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].SecurityGroups[*].GroupId" --output text) --protocol tcp --port 22 --cidr 0.0.0.0/0 &&
     DOT_SSH=$(mktemp -d) &&
     chmod 0700 ${DOT_SSH} &&

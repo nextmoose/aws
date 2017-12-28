@@ -11,4 +11,8 @@ aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=inst
     aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=terminated --query "Reservations[*].Instances[*].SecurityGroups[*].GroupId" --output text | while read GROUP_ID
     do
         aws ec2 delete-security-group --group-id ${GROUP_ID}
+    done &&
+    aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=terminated --query "Reservations[*].Instances[*].PublicIPAddress" --output text | while read PUBLIC_IP_ADDRESS
+    do
+        aws ec2 release-address --allocation-id $(aws ec2 describe-addresses --public-ips ${PUBLIC_IP_ADDRESS} --query "Addresses[*].AllocationId" --output text)
     done
