@@ -35,14 +35,5 @@ EOF
     chmod 0644 ${DOT_SSH}/known_hosts &&
     echo "${HACKER_2_LIEUTENANT_PUBLIC_KEY}" > ${DOT_SSH}/hacker_2_lieutenant_id_rsa.pub &&
     scp -F ${DOT_SSH}/config ${DOT_SSH}/hacker_2_lieutenant_id_rsa.pub lieutenant:/tmp/hacker_2_lieutenant_id_rsa.pub &&
-    (cat <<EOF
-sudo adduser user &&
-    sudo mkdir /home/user/.ssh &&
-    sudo touch /home/user/.ssh/authorized_keys &&
-    sudo chmod 0700 /home/user/.ssh &&
-    sudo chmod 0600 /home/user/.ssh/authorized_keys &&
-    sudo cat /tmp/hacker_2_lieutenant_id_rsa.pub > /home/user/.ssh/authorized_keys &&
-    sudo chown -R user:user /home/user/.ssh &&
-    exit 0
-EOF
-    ) | ssh -F ${DOT_SSH}/config lieutenant
+    scp -F ${DOT_SSH}/config /opt/docker/create-lieutenant-user.sh lieutenant:/tmp/create-lieutenant-user.sh &&
+    ssh -F ${DOT_SSH}/config lieutenant sudo sh /tmp/create-lieutenant-user.sh

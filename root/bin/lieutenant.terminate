@@ -2,17 +2,21 @@
 
 aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].InstanceId" --output text | while read INSTANCE_ID
     do
+        echo DELETING INSTANCE ${INSTANCE_ID} &&
         aws ec2 wait instance-terminated --instance-id $(aws ec2 terminate-instances --instance-ids ${INSTANCE_ID} --query "TerminatingInstances[0].InstanceId" --output text)
     done &&
     aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=terminated --query "Reservations[*].Instances[*].KeyName" --output text | while read KEY_NAME
     do
+        echo DELETING KEY_PAIR ${KEY_NAME} &&
         aws ec2 delete-key-pair --key-name ${KEY_NAME}
     done &&
     aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=terminated --query "Reservations[*].Instances[*].SecurityGroups[*].GroupId" --output text | while read GROUP_ID
     do
+        echo DELETING SECURITY GROUP ${GROUP_ID} &&
         aws ec2 delete-security-group --group-id ${GROUP_ID}
     done &&
     aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=terminated --query "Reservations[*].Instances[*].PublicIPAddress" --output text | while read PUBLIC_IP_ADDRESS
     do
+        echo RELEASING ADDRESS ${PUBLIC_IP_ADDRESS} &&
         aws ec2 release-address --allocation-id $(aws ec2 describe-addresses --public-ips ${PUBLIC_IP_ADDRESS} --query "Addresses[*].AllocationId" --output text)
     done
