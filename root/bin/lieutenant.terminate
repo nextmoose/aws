@@ -1,6 +1,6 @@
 #!/bin/sh
 
-aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=terminated --query "Reservations[*].Instances[*].PublicIPAddress" --output text | while read PUBLIC_IP_ADDRESS
+aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].PublicIPAddress" --output text | while read PUBLIC_IP_ADDRESS
 do
     echo RELEASING ADDRESS ${PUBLIC_IP_ADDRESS} &&
     aws ec2 release-address --allocation-id $(aws ec2 describe-addresses --public-ips ${PUBLIC_IP_ADDRESS} --query "Addresses[*].AllocationId" --output text)
