@@ -8,7 +8,7 @@ aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=inst
     do
         aws ec2 delete-key-pair --key-name ${KEY_NAME}
     done &&
-    aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=terminated --query "Reservations[*].Instances[*].SecurityGroups[*].GroupId" --output text | while READ GROUP_ID
+    aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=terminated --query "Reservations[*].Instances[*].SecurityGroups[*].GroupId" --output text | while read GROUP_ID
     do
         aws ec2 delete-security-group --group-id ${GROUP_ID}
     done
