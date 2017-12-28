@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SECURITY_GROUPS=$(aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=terminated --query "Reservations[*].Instances[*].SecurityGroups[*].GroupId" --output text)
+SECURITY_GROUPS=$(aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].SecurityGroups[*].GroupId" --output text) &&
     aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].PublicIpAddress" --output text | while read PUBLIC_IP_ADDRESS
     do
         aws ec2 release-address --allocation-id $(aws ec2 describe-addresses --public-ips ${PUBLIC_IP_ADDRESS} --query "Addresses[*].AllocationId" --output text)

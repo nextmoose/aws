@@ -48,4 +48,4 @@ adduser user &&
     chown -R user:user /home/user/.ssh
 EOF
     ) | ssh -F ${DOT_SSH}/config lieutenant tee /tmp/create-lieutenant.sh &&
-    ssh -F ${DOT_SSH}/config lieutenant sudo sh /tmp/create-lieutenant-user.sh
+    ssh -F ${DOT_SSH}/config lieutenant sudo sh /tmp/create-lieutenant.sh
