@@ -31,6 +31,7 @@ UserKnownHostsFile ${DOT_SSH}/known_hosts
 EOF
     ) &&
     chmod 0600 ${DOT_SSH}/config ${DOT_SSH}/id_rsa &&
+    sleep 15s &&
     ssh-keyscan $(aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].PublicIpAddress" --output text) > ${DOT_SSH}/known_hosts &&
     chmod 0644 ${DOT_SSH}/known_hosts &&
     echo "${HACKER_2_LIEUTENANT_PUBLIC_KEY}" > ${DOT_SSH}/hacker_2_lieutenant_id_rsa.pub &&
