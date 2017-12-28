@@ -30,6 +30,7 @@ IdentityFile ${DOT_SSH}/id_rsa
 UserKnownHostsFile ${DOT_SSH}/known_hosts
 EOF
     ) &&
+    sleep 10s &&
     chmod 0600 ${DOT_SSH}/config ${DOT_SSH}/id_rsa &&
     ssh-keyscan $(aws ec2 describe-instances --filter Name=tag:moniker,Values=lieutenant Name=instance-state-name,Values=running --query "Reservations[*].Instances[*].PublicIpAddress" --output text) > ${DOT_SSH}/known_hosts &&
     chmod 0644 ${DOT_SSH}/known_hosts &&
@@ -42,6 +43,7 @@ sudo adduser user &&
     sudo chmod 0700 /home/user/.ssh &&
     sudo chmod 0600 /home/user/.ssh/authorized_keys &&
     sudo cat /tmp/hacker_2_lieutenant_id_rsa.pub > /home/user/.ssh/authorized_keys &&
-    sudo chown -R user:user /home/user/.ssh
+    sudo chown -R user:user /home/user/.ssh &&
+    exit 0
 EOF
     ) | ssh -F ${DOT_SSH}/config lieutenant
